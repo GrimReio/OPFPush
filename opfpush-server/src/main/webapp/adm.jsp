@@ -12,13 +12,18 @@
   </head>
 
   <body>
-	Message:
+	  <form action="index.jsp">
+		  <input type="submit" value="Back">
+	  </form>
+
+	ADM message:
   	<% if (request.getParameter("message") != null) { %>
 		<%= request.getParameter("message")%>
 	<% } %>
 	<form action="/adm" method="post">
 		<div><textarea name="txtInput" rows="3" cols="60"></textarea></div>
-		<div><input type="submit" value="Submit" /></div>   
+		<div><input type="submit" name="action" value="Submit" /></div>
+		<div><input type="submit" name="action" value="UpdateToken" /></div>
   	</form>
   </body>
 </html>

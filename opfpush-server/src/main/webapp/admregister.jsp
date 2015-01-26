@@ -12,7 +12,11 @@
   </head>
 
   <body>
-	Insert device Registration_id:
+      <form action="index.jsp">
+          <input type="submit" value="Back">
+      </form>
+
+	Insert ADM device registration ID:
   	<form action="/admregister" method="post">
 		<div><textarea name="txtRegId" rows="3" cols="60"></textarea></div>
 	    <div><input type="submit" value="Submit" /></div>

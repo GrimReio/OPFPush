@@ -38,16 +38,6 @@ public class AdmServlet extends HttpServlet {
 
     private String _authToken = null;
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        try {
-            _authToken = getAuthToken(PROD_CLIENT_ID, PROD_CLIENT_SECRET);
-            _log.info("Auth token: " + _authToken);
-        } catch (Exception e) {
-            _log.info(e.getMessage());
-        }
-    }
-
     // Handles HTTP GET request from the gcm.jsp
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,29 +45,41 @@ public class AdmServlet extends HttpServlet {
     }
 
     // Handles HTTP POST request - submit message from the adm.jsp
-    public void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-        String txtInput = req.getParameter("txtInput");
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String action = req.getParameter("action");
 
-        // Creating a message
-        String message = URLEncoder.encode(txtInput, "UTF-8");
+        if ("Submit".equals(action)) {
+            String txtInput = req.getParameter("txtInput");
 
-        ArrayList<String> devices = getAllRegIds();
-        if (!devices.isEmpty()) {
-            for (String device : devices) {
-                try {
-                    sendMessageToDevice(message, device, "message", 3600);
-                } catch (Exception e) {
-                    _log.info(e.getMessage());
-                    resp.sendRedirect("/adm.jsp?error=" + e.getMessage());
-                    return;
+            // Creating a message
+            String message = URLEncoder.encode(txtInput, "UTF-8");
+
+            ArrayList<String> devices = getAllRegIds();
+            if (!devices.isEmpty()) {
+                for (String device : devices) {
+                    try {
+                        sendMessageToDevice(message, device, "message", 3600);
+                    } catch (Exception e) {
+                        _log.info(e.getMessage());
+                        resp.sendRedirect("/adm.jsp?error=" + e.getMessage());
+                        return;
+                    }
+                    _log.info("Message posted: " + message);
                 }
-                _log.info("Message posted: " + message);
+                resp.sendRedirect("/adm.jsp?message=" + message);
+            } else {
+                _log.info("No devices registered.");
+                resp.sendRedirect("/adm.jsp?message=warning-no-devices");
             }
-            resp.sendRedirect("/adm.jsp?message=" + message);
-        } else {
-            _log.info("No devices registered.");
-            resp.sendRedirect("/adm.jsp?message=warning-no-devices");
+        } else if ("UpdateToken".equals(action)) {
+            try {
+                _authToken = getAuthToken(PROD_CLIENT_ID, PROD_CLIENT_SECRET);
+                _log.info("Auth token: " + _authToken);
+                resp.sendRedirect("/adm.jsp?token=" + _authToken);
+            } catch (Exception e) {
+                _log.info(e.getMessage());
+                resp.sendRedirect("/adm.jsp?exception=" + e.getMessage());
+            }
         }
     }
 

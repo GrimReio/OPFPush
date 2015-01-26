@@ -12,7 +12,11 @@
   </head>
 
   <body>
-	Message:
+  	  <form action="index.jsp">
+		  <input type="submit" value="Back">
+	  </form>
+
+	GCM message:
   	<% if (request.getParameter("message") != null) { %>
 		<%= request.getParameter("message")%>
 	<% } %>

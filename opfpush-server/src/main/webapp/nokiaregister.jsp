@@ -12,7 +12,11 @@
   </head>
 
   <body>
-	Insert device Registration_id:
+      <form action="index.jsp">
+          <input type="submit" value="Back">
+      </form>
+
+      Insert Nokia device registration ID:
   	<form action="/nokiaregister" method="post">
 		<div><textarea name="txtRegId" rows="3" cols="60"></textarea></div>
 	    <div><input type="submit" value="Submit" /></div>
